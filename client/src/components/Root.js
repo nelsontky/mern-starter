@@ -1,21 +1,10 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
 
-import { increment, decrement } from "../actions/counterActions";
+import { useStateValue } from "../store";
 
 export default function Root() {
-  const counter = useSelector((state) => state.counter);
-  const dispatch = useDispatch()
+  const [state, dispatch] = useStateValue();
+  console.log(state);
 
-  return (
-    <div>
-      <h1>Counter: {counter}</h1>
-      <button onClick={() => dispatch(increment())}>
-        Increase Counter
-      </button>
-      <button onClick={() => dispatch(decrement())}>
-        Decrease Counter
-      </button>
-    </div>
-  );
+  return <h1>Hello</h1>;
 }

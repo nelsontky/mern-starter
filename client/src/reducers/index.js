@@ -1,9 +1,7 @@
-import { combineReducers } from "redux";
+import colorReducer from "./colorReducer";
 
-import counter from "./counter";
-
-const rootReducer = combineReducers({
-  counter,
-});
-
-export default rootReducer;
+export default (state, action) => {
+  return {
+    color: colorReducer(state, action),
+  };
+};
