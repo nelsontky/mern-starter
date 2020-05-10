@@ -17,4 +17,9 @@ module.exports = (app) => {
     passport.authenticate("local"),
     (req, res) => res.status(200).json({ success: "Login success" })
   );
+
+  app.get("/logout", (req, res) => {
+    req.logout();
+    res.redirect("/");
+  });
 };
