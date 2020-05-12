@@ -1,7 +1,7 @@
-import colorReducer from "./colorReducer";
+import loginReducer from "./loginReducer";
 
 export default (state, action) => {
   return {
-    color: colorReducer(state, action),
+    currentUser: loginReducer(state, action),
   };
 };

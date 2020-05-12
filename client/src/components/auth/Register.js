@@ -28,6 +28,8 @@ function Register() {
       case "password2":
         setPassword2(e.target.value);
         break;
+      default:
+        break;
     }
   };
 

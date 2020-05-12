@@ -1,18 +1,23 @@
 import React, { useState } from "react";
 
+import { login } from "../../apis/auth";
+import { useStateValue } from "../../store";
+import setCurrentUser from "../../actions/setCurrentUser";
+
 function Register() {
+  const [state, dispatch] = useStateValue();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const userData = {
-      username,
-      password,
-    };
-
-    console.log(userData);
+    login(username, password).then((res) => {
+      if (res.status === 200) {
+        dispatch(setCurrentUser(res.data.user));
+        console.log(state);
+      }
+    });
   };
 
   const onChange = (e) => {
@@ -22,6 +27,8 @@ function Register() {
         break;
       case "password":
         setPassword(e.target.value);
+        break;
+      default:
         break;
     }
   };
