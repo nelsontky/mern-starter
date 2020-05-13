@@ -1,23 +1,20 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { login } from "../../apis/auth";
-import { useStateValue } from "../../store";
 import setCurrentUser from "../../actions/setCurrentUser";
 
 function Register() {
-  const [state, dispatch] = useStateValue();
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    login(username, password).then((res) => {
-      if (res.status === 200) {
-        dispatch(setCurrentUser(res.data.user));
-        console.log(state);
-      }
-    });
+    login(username, password).then((res) => console.log(res));
   };
 
   const onChange = (e) => {
@@ -35,6 +32,7 @@ function Register() {
 
   return (
     <form onSubmit={onSubmit}>
+      <p>{user.username ? user.username : ""}</p>
       <div>
         <label>Email:</label>
         <input id="username" value={username} onChange={onChange} />

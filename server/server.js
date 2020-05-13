@@ -1,10 +1,12 @@
 const express = require("express");
+const session = require("express-session");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
 const authRoute = require("./routes/auth");
 const MONGO_URI = require("../secrets.json").MONGO_URI;
 const passportMiddleware = require("./middlewares/auth/passport");
+const SESSION_SECRET = require("../secrets.json").SESSION_SECRET;
 
 const app = express();
 
@@ -15,6 +17,14 @@ app.use(
 );
 
 app.use(bodyParser.json());
+
+app.use(
+  session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 mongoose
   .connect(MONGO_URI, { useNewUrlParser: true })

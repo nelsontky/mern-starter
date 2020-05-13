@@ -1,21 +1,10 @@
-const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const bcrypt = require("bcryptjs");
 
-const SESSION_SECRET = require("../../../secrets.json").SESSION_SECRET;
 const User = require("../../models/User");
 
 module.exports = (app) => {
-  app.use(
-    session({
-      secret: SESSION_SECRET,
-      resave: false,
-      saveUninitialized: true,
-      cookie: { secure: true },
-    })
-  );
-
   app.use(passport.initialize());
   app.use(passport.session());
 

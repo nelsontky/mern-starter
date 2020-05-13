@@ -1,16 +1,9 @@
-import React, { createContext, useContext, useReducer } from "react";
-
+import { createStore, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
 import rootReducer from "./reducers";
 
-const initialState = {};
-const StateContext = createContext(initialState);
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export const StateProvider = ({ children }) => {
-  return (
-    <StateContext.Provider value={useReducer(rootReducer, initialState)}>
-      {children}
-    </StateContext.Provider>
-  );
-};
-
-export const useStateValue = () => useContext(StateContext);
+export default function configureStore() {
+  return createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+}

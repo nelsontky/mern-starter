@@ -2,6 +2,7 @@ const passport = require("passport");
 
 const registerMiddleware = require("../middlewares/auth/register");
 const loginMiddleware = require("../middlewares/auth/login");
+const ensureAuthenticated = require("../middlewares/auth/ensureAuthenticated");
 
 function extractUserInfo(user) {
   const { username } = user;
@@ -9,37 +10,45 @@ function extractUserInfo(user) {
 }
 
 module.exports = (app) => {
-  app.post(
-    "/register",
-    registerMiddleware,
-    function (req, res, next) {
-      passport.authenticate("local", (err, user, info) => {
-        req.user = extractUserInfo(user);
-        next();
-      })(req, res, next);
-    },
-    (req, res) =>
-      res.status(200).json({ success: "Registration success", user: req.user })
-  );
+  app.post("/register", registerMiddleware, function (req, res, next) {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
 
-  app.post(
-    "/login",
-    loginMiddleware,
-    function (req, res, next) {
-      passport.authenticate("local", (err, user, info) => {
-        if (!user) {
-          return res
-            .status(400)
-            .json({ username: "Email or password incorrect" });
-        } else {
-          req.user = extractUserInfo(user);
-          next();
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
         }
-      })(req, res, next);
-    },
-    (req, res) =>
-      res.status(200).json({ success: "Login success", user: req.user })
-  );
+        return res
+          .status(200)
+          .json({ success: "Login success", user: extractUserInfo(user) });
+      });
+    })(req, res, next);
+  });
+
+  app.post("/login", loginMiddleware, function (req, res, next) {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ username: "Email or password incorrect" });
+      }
+
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+        return res
+          .status(200)
+          .json({ success: "Login success", user: extractUserInfo(user) });
+      });
+    })(req, res, next);
+  });
 
   app.get("/logout", (req, res) => {
     req.logout();
