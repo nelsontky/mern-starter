@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 import { login } from "../../apis/auth";
 import setCurrentUser from "../../actions/setCurrentUser";
@@ -10,11 +11,15 @@ function Register() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [redirect, setRedirect] = useState(null);
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    login(username, password).then((res) => console.log(res));
+    login(username, password).then((res) => {
+      dispatch(setCurrentUser(res.data.user));
+      setRedirect("/profile");
+    });
   };
 
   const onChange = (e) => {
@@ -30,7 +35,9 @@ function Register() {
     }
   };
 
-  return (
+  return redirect ? (
+    <Redirect to={redirect} />
+  ) : (
     <form onSubmit={onSubmit}>
       <p>{user.username ? user.username : ""}</p>
       <div>

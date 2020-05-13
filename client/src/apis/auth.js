@@ -12,7 +12,7 @@ const getOptions = (url, params) => {
 
 export async function login(username, password) {
   try {
-    return await axios(getOptions("/login", { username, password }));
+    return await axios(getOptions("/api/login", { username, password }));
   } catch (e) {
     return e.response;
   }

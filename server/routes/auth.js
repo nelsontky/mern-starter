@@ -10,7 +10,7 @@ function extractUserInfo(user) {
 }
 
 module.exports = (app) => {
-  app.post("/register", registerMiddleware, function (req, res, next) {
+  app.post("/api/register", registerMiddleware, function (req, res, next) {
     passport.authenticate("local", (err, user, info) => {
       if (err) {
         return next(err);
@@ -27,7 +27,7 @@ module.exports = (app) => {
     })(req, res, next);
   });
 
-  app.post("/login", loginMiddleware, function (req, res, next) {
+  app.post("/api/login", loginMiddleware, function (req, res, next) {
     passport.authenticate("local", (err, user, info) => {
       if (err) {
         return next(err);
@@ -50,7 +50,7 @@ module.exports = (app) => {
     })(req, res, next);
   });
 
-  app.get("/logout", (req, res) => {
+  app.get("/api/logout", (req, res) => {
     req.logout();
     res.redirect("/");
   });
