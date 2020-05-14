@@ -50,6 +50,10 @@ module.exports = (app) => {
     })(req, res, next);
   });
 
+  app.get("/api/user", ensureAuthenticated, (req, res) =>
+    res.status(200).json({ user: extractUserInfo(req.user) })
+  );
+
   app.get("/api/logout", (req, res) => {
     req.logout();
     res.redirect("/");

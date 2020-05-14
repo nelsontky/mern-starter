@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { login } from "../../apis/auth";
 import setCurrentUser from "../../actions/setCurrentUser";
@@ -11,14 +11,17 @@ function Register() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [redirect, setRedirect] = useState(null);
+
+  const history = useHistory();
 
   const onSubmit = (e) => {
     e.preventDefault();
 
     login(username, password).then((res) => {
-      dispatch(setCurrentUser(res.data.user));
-      setRedirect("/profile");
+      if (res.status === 200) {
+        dispatch(setCurrentUser(res.data.user));
+        history.push("/profile");
+      }
     });
   };
 
@@ -35,11 +38,8 @@ function Register() {
     }
   };
 
-  return redirect ? (
-    <Redirect to={redirect} />
-  ) : (
+  return (
     <form onSubmit={onSubmit}>
-      <p>{user.username ? user.username : ""}</p>
       <div>
         <label>Email:</label>
         <input id="username" value={username} onChange={onChange} />

@@ -17,3 +17,11 @@ export async function login(username, password) {
     return e.response;
   }
 }
+
+export async function checkAuthenticated() {
+  try {
+    return await axios.get("/api/user");
+  } catch (e) {
+    return e.response;
+  }
+}
