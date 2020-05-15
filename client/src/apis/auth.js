@@ -18,6 +18,24 @@ export async function login(username, password) {
   }
 }
 
+export async function register(username, password, password2) {
+  try {
+    return await axios(
+      getOptions("/api/register", { username, password, password2 })
+    );
+  } catch (e) {
+    return e.response;
+  }
+}
+
+export async function logout() {
+  try {
+    return await axios.get("/api/logout");
+  } catch (e) {
+    return e.response;
+  }
+}
+
 export async function checkAuthenticated() {
   try {
     return await axios.get("/api/user");

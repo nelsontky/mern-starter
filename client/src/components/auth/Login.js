@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
+import Errors from "../Errors";
 import { login } from "../../apis/auth";
 import setCurrentUser from "../../actions/setCurrentUser";
 
 function Register() {
-  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const history = useHistory();
+  const [errors, setErrors] = useState(null);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -21,40 +21,36 @@ function Register() {
       if (res.status === 200) {
         dispatch(setCurrentUser(res.data.user));
         history.push("/profile");
+      } else {
+        setErrors(res.data);
       }
     });
   };
 
-  const onChange = (e) => {
-    switch (e.target.id) {
-      case "username":
-        setUsername(e.target.value);
-        break;
-      case "password":
-        setPassword(e.target.value);
-        break;
-      default:
-        break;
-    }
-  };
-
   return (
-    <form onSubmit={onSubmit}>
-      <div>
-        <label>Email:</label>
-        <input id="username" value={username} onChange={onChange} />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input
-          id="password"
-          value={password}
-          onChange={onChange}
-          type="password"
-        />
-      </div>
-      <button type="submit">Login</button>
-    </form>
+    <div>
+      <form onSubmit={onSubmit}>
+        <div>
+          <label>Email:</label>
+          <input
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+          />
+        </div>
+        <button type="submit">Login</button>
+      </form>
+      <Errors errors={errors} />
+    </div>
   );
 }
 
