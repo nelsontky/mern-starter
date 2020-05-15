@@ -2,6 +2,7 @@ const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const MongoDBStore = require("connect-mongodb-session")(session);
 
 const authRoute = require("./routes/auth");
 const MONGO_URI = require("../secrets.json").MONGO_URI;
@@ -9,6 +10,14 @@ const passportMiddleware = require("./middlewares/auth/passport");
 const SESSION_SECRET = require("../secrets.json").SESSION_SECRET;
 
 const app = express();
+const store = new MongoDBStore({
+  uri: MONGO_URI,
+  collection: "loginSessions",
+});
+
+store.on("error", (error) => {
+  console.log(error);
+});
 
 app.use(
   bodyParser.urlencoded({
@@ -23,7 +32,8 @@ app.use(
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
+    store,
   })
 );
 

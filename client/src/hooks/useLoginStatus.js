@@ -12,15 +12,13 @@ function useLoginStatus(redirect = true) {
 
   useEffect(() => {
     if (!user.username) {
-      checkAuthenticated()
-        .then((res) => {
-          if (res.status === 200) {
-            dispatch(setCurrentUser(res.data.user));
-          } else if (redirect) {
-            history.push("/login");
-          }
-        })
-        .catch(/* Do not log any error */);
+      checkAuthenticated().then((res) => {
+        if (res.status === 200) {
+          dispatch(setCurrentUser(res.data.user));
+        } else if (redirect) {
+          history.push("/login");
+        }
+      });
     }
   });
 }

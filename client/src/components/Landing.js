@@ -10,37 +10,36 @@ export default function Main() {
 
   useLoginStatus(false);
 
-  if (!user.username) {
-    return (
-      <div>
-        <h1>MERN starter</h1>
-        <p>
-          <Link to="/login">Login</Link>
-        </p>
-        <p>
-          <Link to="/register">Register</Link>
-        </p>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <h1>MERN starter</h1>
-        <p>
-          <Link to="/profile">Profile</Link>
-        </p>
-        <p>
-          <Link
-            to="/"
-            onClick={() => {
-              logout();
-              window.location.reload();
-            }}
-          >
-            Logout
-          </Link>
-        </p>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <h1>MERN starter</h1>
+      {user.username ? (
+        <div>
+          <p>
+            <Link to="/profile">Profile</Link>
+          </p>
+          <p>
+            <Link
+              to="/"
+              onClick={() => {
+                logout();
+                window.location.reload();
+              }}
+            >
+              Logout
+            </Link>
+          </p>
+        </div>
+      ) : (
+        <div>
+          <p>
+            <Link to="/login">Login</Link>
+          </p>
+          <p>
+            <Link to="/register">Register</Link>
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }
