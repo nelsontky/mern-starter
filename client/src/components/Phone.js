@@ -20,7 +20,6 @@ export default function Phone() {
           callback: (res) => {
             // reCAPTCHA solved, allow signInWithPhoneNumber
             // setCanSubmit(true);
-            console.log("yay");
             setCanSubmit(true);
           },
           "expired-callback": () => {
@@ -38,6 +37,7 @@ export default function Phone() {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    setErrors(null);
     const appVerifier = window.recaptchaVerifier;
 
     firebase
@@ -52,27 +52,51 @@ export default function Phone() {
       })
       .catch((error) => {
         // Error; SMS not sent
-        setErrors({
-          verificationError:
-            "An error occurred during verification. Please try again.",
-        });
+        let errors = { phoneVerificationError: "" };
+
+        switch (error.code) {
+          case "auth/captcha-check-failed":
+            errors.phoneVerificationError =
+              "reCAPTCHA response token was invalid, or expired. Please try again.";
+            break;
+          case "auth/invalid-phone-number":
+          case "auth/missing-phone-number":
+            errors.phoneVerificationError =
+              "Phone number is invalid. Please try again.";
+            break;
+          case "auth/quota-exceeded":
+            errors.phoneVerificationError =
+              "Too many requests. Please try again later.";
+            break;
+          default:
+            errors.phoneVerificationError =
+              "An error has occurred. Please try again later.";
+            break;
+        }
+
+        setErrors(errors);
 
         setCanSubmit(false);
 
-        window.recaptchaVerifier.render().then(function (widgetId) {
+        window.recaptchaVerifier.render().then((widgetId) => {
           window.recaptchaVerifier.reset(widgetId);
         });
-
-
       });
   };
 
   const submitOtp = (e) => {
     e.preventDefault();
+    setErrors(null);
 
     window.confirmationResult
       .confirm(otp)
-      .then((result) => console.log("success")); // verification done
+      .then((result) => console.log("success")) // verification done
+      .catch((err) => {
+        setErrors({
+          phoneVerificationError:
+            "Verification code invalid. Please try again.",
+        });
+      });
   };
 
   return (

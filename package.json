@@ -20,6 +20,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "firebase": "^7.14.4",
+    "firebase-admin": "^8.12.1",
     "is-empty": "^1.2.0",
     "mongoose": "^5.9.12",
     "passport": "^0.4.1",
