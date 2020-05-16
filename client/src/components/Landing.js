@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { logout } from "../apis/auth";
 import useLoginStatus from "../hooks/useLoginStatus";
 
-export default function Main() {
+export default function Landing() {
   const user = useSelector((state) => state.user);
 
   useLoginStatus(false);
