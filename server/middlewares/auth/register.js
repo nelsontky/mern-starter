@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 
 const User = require("../../models/User");
+const TempUser = require("../../models/TempUser");
 const validateRegisterInput = require("../../validation/register");
 
 module.exports = (req, res, next) => {
@@ -10,14 +11,15 @@ module.exports = (req, res, next) => {
     return res.status(400).json(errors);
   }
 
-  const username = req.body.username;
-  const password = req.body.password;
+  const { username, password, phoneNumber } = req.body;
 
-  User.findOne({ username }, (err, user) => {
+  User.findOne({ $or: [{ username }, { phoneNumber }] }, (err, user) => {
     if (err) {
       next(err);
     } else if (user) {
-      return res.status(400).json({ username: "Email already exists " });
+      return res
+        .status(400)
+        .json({ username: "Email and/or phone number already exists " });
     } else {
       const passwordHash = bcrypt.hashSync(password, 10);
 

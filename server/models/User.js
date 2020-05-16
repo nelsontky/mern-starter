@@ -5,12 +5,16 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   username: {
     type: String,
-    required: true
+    required: true,
   },
   passwordHash: {
     type: String,
-    required: true
-  }
-}); 
+    required: true,
+  },
+  phoneNumber: {
+    type: String,
+    required: true,
+  },
+});
 
 module.exports = mongoose.model("User", userSchema);
